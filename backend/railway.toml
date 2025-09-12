@@ -14,15 +14,13 @@ cmds = ["echo 'Skipping default install'"]
 
 [phases.build]
 cmds = [
-  # Clean up old vendor/cache
   "rm -rf vendor bootstrap/cache/*.php composer.lock",
-  # Install Laravel dependencies
   "composer install --no-dev --optimize-autoloader --no-interaction",
-  # Build React (from /frontend folder)
+  # ✅ Build Vite app
   "cd ../frontend && npm ci && npm run build",
-  # Copy built React files into Laravel's public folder
-  "cp -r ../frontend/build/* public/",
-  # Clear and cache Laravel configs
+  # ✅ Copy from dist (not build!)
+  "mkdir -p public",
+  "cp -r ../frontend/dist/* public/",
   "php artisan config:clear",
   "php artisan cache:clear",
   "php artisan config:cache"
