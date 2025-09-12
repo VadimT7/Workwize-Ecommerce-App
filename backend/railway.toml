@@ -1,6 +1,15 @@
-[build]
-builder = "nixpacks"
-buildCommand = "rm -rf vendor composer.lock && composer install --no-dev --optimize-autoloader"
+[phases.setup]
+nixPkgs = ["php", "nginx", "phpPackages.composer"]
 
-[deploy]
-startCommand = "php -S 0.0.0.0:$PORT -t public"
+[phases.install]
+# Override the default install to do nothing
+cmds = ["echo 'Skipping default install'"]
+
+[phases.build]
+cmds = [
+  "rm -rf vendor composer.lock",
+  "composer install --no-dev --optimize-autoloader --no-interaction"
+]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t public"
