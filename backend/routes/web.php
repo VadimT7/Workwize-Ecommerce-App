@@ -30,5 +30,9 @@ require __DIR__.'/auth.php';
 */
 
 Route::get('/{any}', function () {
-    return file_get_contents(public_path('index.html'));
+    $indexPath = public_path('index.html');
+    if (!file_exists($indexPath)) {
+        abort(404, 'React build not found');
+    }
+    return file_get_contents($indexPath);
 })->where('any', '.*');
