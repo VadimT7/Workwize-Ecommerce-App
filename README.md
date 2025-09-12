@@ -2,6 +2,11 @@
 
 A simple e-commerce application where multiple suppliers can register and add products, and customers can shop across all suppliers. Built with Laravel (backend) and React (frontend).
 
+## Access the Application
+  The application was deployed on Railway and can be accessed through the following link:  
+https://workwize-ecommerce-app-production.up.railway.app/
+
+## Demonstration Screenshots
 **Customer Dashboard:**  
 1. Product Shop:  
    <img width="1876" height="1049" alt="image" src="https://github.com/user-attachments/assets/5aafae99-cfec-4052-93e7-e923ddb1ba4e" />
