@@ -51,8 +51,8 @@ const HomePage = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="hero">
+      <div className="hero">
+        <div className="container">
           <h1>Welcome to Multi-Supplier E-Commerce</h1>
           <p>Shop from multiple suppliers or become a supplier yourself</p>
           
@@ -76,8 +76,10 @@ const HomePage = () => {
             </div>
           )}
         </div>
+      </div>
 
-        <div className="products-section">
+      <div className="products-section">
+        <div className="container">
           <h2>Featured Products</h2>
           {loading ? (
             <div className="text-center">Loading products...</div>
