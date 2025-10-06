@@ -96,6 +96,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const deleteAccount = async () => {
+    try {
+      setError(null);
+      await authService.deleteAccount();
+      // Clear local storage and user state after successful deletion
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      setError(null);
+      return { success: true };
+    } catch (err) {
+      const message = err.response?.data?.message || 'Account deletion failed';
+      setError(message);
+      return { success: false, error: message };
+    }
+  };
+
   const isSupplier = () => user?.role === 'supplier';
   const isCustomer = () => user?.role === 'customer';
 
@@ -106,6 +123,7 @@ export const AuthProvider = ({ children }) => {
     register,
     login,
     logout,
+    deleteAccount,
     isSupplier,
     isCustomer,
     isAuthenticated: !!user,
