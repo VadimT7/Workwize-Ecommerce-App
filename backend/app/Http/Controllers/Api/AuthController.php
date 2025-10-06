@@ -58,6 +58,13 @@ class AuthController extends Controller
             ]);
         }
 
+        // Check if user account has been deleted/anonymized
+        if ($user->isAnonymized() || $user->trashed()) {
+            throw ValidationException::withMessages([
+                'email' => ['This account has been deleted and cannot be accessed.'],
+            ]);
+        }
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
@@ -84,6 +91,29 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json($request->user());
+    }
+
+    /**
+     * Delete user account (GDPR compliance)
+     * Anonymizes user data while preserving orders for tax audit requirements
+     */
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->user();
+
+        // Revoke all tokens to prevent further access
+        $user->tokens()->delete();
+
+        // Anonymize user data instead of hard deletion
+        // This preserves orders and products for tax audit requirements
+        $user->anonymizeForDeletion();
+
+        // Soft delete the user record
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Account deleted successfully. Your personal information has been removed while preserving order records for tax compliance.',
+        ], 200);
     }
 }
 

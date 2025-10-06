@@ -35,5 +35,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/checkout', [OrderController::class, 'checkout']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
         Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
+        Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
     });
 });
