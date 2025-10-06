@@ -7,12 +7,43 @@ import { useCart } from '../contexts/CartContext';
  */
 const Navigation = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout, isSupplier, isCustomer } = useAuth();
+  const { user, isAuthenticated, logout, deleteAccount, isSupplier, isCustomer } = useAuth();
   const { getCartCount } = useCart();
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete your account? This action cannot be undone. Your orders will be kept for tax audit purposes, but all your personal information will be permanently removed.'
+    );
+    
+    if (!confirmed) return;
+
+    const doubleConfirmed = window.confirm(
+      'This is your final warning. Deleting your account will:\n\n' +
+      '• Permanently remove your name, email, and personal information\n' +
+      '• Prevent you from logging in again\n' +
+      '• Keep your order history for tax audit purposes (10 years)\n\n' +
+      'Are you absolutely sure you want to proceed?'
+    );
+
+    if (!doubleConfirmed) return;
+
+    try {
+      const result = await deleteAccount();
+      if (result.success) {
+        alert('Your account has been successfully deleted.');
+        navigate('/login');
+      } else {
+        alert(`Failed to delete account: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Account deletion error:', error);
+      alert('An error occurred while deleting your account. Please try again.');
+    }
   };
 
   return (
@@ -77,6 +108,17 @@ const Navigation = () => {
                 
                 <button onClick={handleLogout} className="btn">
                   Logout
+                </button>
+                <button 
+                  onClick={handleDeleteAccount} 
+                  className="btn btn-danger"
+                  style={{
+                    backgroundColor: '#dc2626',
+                    color: 'white',
+                    border: '1px solid #dc2626'
+                  }}
+                >
+                  Delete Account
                 </button>
               </>
             ) : (
